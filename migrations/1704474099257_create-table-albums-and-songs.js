@@ -22,6 +22,10 @@ exports.up = (pgm) => {
       notNull: true,
       default: pgm.func('current_timestamp'),
     },
+    cover: {
+      type: 'VARCHAR(255)',
+      notNull: false,
+    },
   });
 
   pgm.createTable('songs', {

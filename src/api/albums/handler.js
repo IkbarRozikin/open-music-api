@@ -1,8 +1,9 @@
 const autoBind = require('auto-bind');
 
 class AlbumsHandler {
-  constructor(service, validator) {
-    this.service = service;
+  constructor(albumsService, storageService, validator) {
+    this.albumsService = albumsService;
+    this.storageService = storageService;
     this.validator = validator;
 
     autoBind(this);
@@ -11,7 +12,7 @@ class AlbumsHandler {
   async postAlbumHandler(req, h) {
     this.validator.validateAlbumPayload(req.payload);
 
-    const albumId = await this.service.addAlbum(req.payload);
+    const albumId = await this.albumsService.addAlbum(req.payload);
 
     const response = h
       .response({
@@ -28,7 +29,7 @@ class AlbumsHandler {
   async getAlbumByIdHandler(req, h) {
     const { albumId } = req.params;
 
-    const album = await this.service.getAlbumById(albumId);
+    const album = await this.albumsService.getAlbumById(albumId);
 
     const response = h
       .response({
@@ -70,6 +71,34 @@ class AlbumsHandler {
         message: 'Album deleted successfully',
       })
       .code(200);
+
+    return response;
+  }
+
+  async postAlbumCoverHandler(req, h) {
+    const { cover } = req.payload;
+
+    console.log(cover.hapi.headers);
+
+    this.validator.validateImageHeaders(cover.hapi.headers);
+
+    const filename = await this.storageService.writeFile(cover, cover.hapi);
+
+    const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
+
+    const { albumId } = req.params;
+
+    await this.albumsService.addAlbumCoverById(albumId, fileLocation);
+
+    const response = h
+      .response({
+        status: 'success',
+        message: 'Cover album successfully uploaded',
+        data: {
+          fileLocation,
+        },
+      })
+      .code(201);
 
     return response;
   }
