@@ -1,4 +1,6 @@
-const mapDBToModel = ({ id, name, year, cover: coverUrl }) => ({
+const mapDBToModel = ({
+  id, name, year, cover: coverUrl,
+}) => ({
   id,
   name,
   year,

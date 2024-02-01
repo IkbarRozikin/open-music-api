@@ -48,7 +48,7 @@ class AlbumsHandler {
 
     const { id } = req.params;
 
-    await this.service.editAlbumById(id, req.payload);
+    await this.albumsService.editAlbumById(id, req.payload);
 
     const response = h
       .response({
@@ -63,7 +63,7 @@ class AlbumsHandler {
   async deleteAlbumByIdHandler(req, h) {
     const { id } = req.params;
 
-    await this.service.deleteAlbumById(id);
+    await this.albumsService.deleteAlbumById(id);
 
     const response = h
       .response({
@@ -77,8 +77,6 @@ class AlbumsHandler {
 
   async postAlbumCoverHandler(req, h) {
     const { cover } = req.payload;
-
-    console.log(cover.hapi.headers);
 
     this.validator.validateImageHeaders(cover.hapi.headers);
 
@@ -102,6 +100,8 @@ class AlbumsHandler {
 
     return response;
   }
+
+  // async postLikeAlbum() {}
 }
 
 module.exports = AlbumsHandler;

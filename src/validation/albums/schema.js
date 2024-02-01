@@ -4,7 +4,8 @@ const currentYear = new Date().getFullYear();
 
 const AlbumsPayloadSchema = Joi.object({
   name: Joi.string().required(),
-  year: Joi.number().integer().min(1000).max(currentYear).required(),
+  year: Joi.number().integer().min(1000).max(currentYear)
+    .required(),
 });
 
 const ImageHeadersSchema = Joi.object({
@@ -15,7 +16,7 @@ const ImageHeadersSchema = Joi.object({
       'image/gif',
       'image/jpeg',
       'image/png',
-      'image/webp'
+      'image/webp',
     )
     .required(),
 }).unknown();

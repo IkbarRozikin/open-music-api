@@ -5,9 +5,8 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const { mapDBToModel, mapDBToModelSongs } = require('../../utils');
 
 class AlbumsService {
-  constructor(storageService) {
+  constructor() {
     this.pool = new Pool();
-    this.storageService = storageService;
   }
 
   async addAlbum({ name, year }) {

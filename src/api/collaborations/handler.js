@@ -19,7 +19,7 @@ class CollaborationsHandler {
 
     const collaborationId = await this.collaborationsService.addCollaboration(
       playlistId,
-      userId
+      userId,
     );
 
     const response = h.response({
@@ -33,7 +33,7 @@ class CollaborationsHandler {
     return response;
   }
 
-  async deleteCollaborationHandler(req, h) {
+  async deleteCollaborationHandler(req) {
     this.validator.validateCollaborationPayload(req.payload);
 
     const { id: credentialId } = req.auth.credentials;

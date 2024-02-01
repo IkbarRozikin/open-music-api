@@ -28,7 +28,7 @@ class PlaylistsService {
 
     if (playlist.owner !== owner) {
       throw new AuthorizationError(
-        'You are not authorized to access this resource'
+        'You are not authorized to access this resource',
       );
     }
   }
@@ -84,7 +84,7 @@ class PlaylistsService {
     const checkSongResult = await this.pool.query(checkSongQuery);
     if (checkSongResult.rows.length === 0) {
       throw new NotFoundError(
-        'Playlist failed to be added, the song was not found'
+        'Playlist failed to be added, the song was not found',
       );
     }
 
@@ -127,10 +127,10 @@ class PlaylistsService {
   async getPlaylistsSongs(playlistId) {
     const queryPlaylist = {
       text:
-        'SELECT playlists.id, playlists.name, users.username AS owner ' +
-        'FROM playlists ' +
-        'JOIN users ON playlists.owner = users.id ' +
-        'WHERE playlists.id = $1',
+        'SELECT playlists.id, playlists.name, users.username AS owner '
+        + 'FROM playlists '
+        + 'JOIN users ON playlists.owner = users.id '
+        + 'WHERE playlists.id = $1',
       values: [playlistId],
     };
 
@@ -192,7 +192,7 @@ class PlaylistsService {
 
     if (result.rowCount === 0) {
       throw new NotFoundError(
-        'Failed to remove the song from the playlist. ID not found'
+        'Failed to remove the song from the playlist. ID not found',
       );
     }
   }

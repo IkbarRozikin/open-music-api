@@ -48,7 +48,7 @@ class PlaylistsHandler {
     return response;
   }
 
-  async deletePlaylistHandler(req, h) {
+  async deletePlaylistHandler(req) {
     const { playlistId } = req.params;
 
     const { id: owner } = req.auth.credentials;
@@ -108,7 +108,7 @@ class PlaylistsHandler {
     return response;
   }
 
-  async deletePlaylistSongsHandler(req, h) {
+  async deletePlaylistSongsHandler(req) {
     this.validator.validatePlaylistsSongsPayload(req.payload);
 
     const { playlistId } = req.params;
@@ -122,7 +122,7 @@ class PlaylistsHandler {
       playlistId,
       songId,
       owner,
-      action
+      action,
     );
 
     return {
@@ -131,7 +131,7 @@ class PlaylistsHandler {
     };
   }
 
-  async getPlaylistActivitiesHandler(req, h) {
+  async getPlaylistActivitiesHandler(req) {
     const { playlistId } = req.params;
     const { id: owner } = req.auth.credentials;
 

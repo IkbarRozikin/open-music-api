@@ -50,11 +50,11 @@ const init = async () => {
   const storageService = new StorageService(
     path.resolve(__dirname, 'api/uploads/file/images')
   );
-  const albumsService = new AlbumsService(storageService);
   const songsService = new SongsService();
   const usersService = new UserService();
   const authenticationsService = new AuthenticationService();
   const playlistsService = new PlaylistsService(collaborationsService);
+  const albumsService = new AlbumsService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -139,7 +139,8 @@ const init = async () => {
     {
       plugin: _exports,
       options: {
-        service: ProducerService,
+        playlistsService,
+        ProducerService,
         validator: ExportsValidator,
       },
     },

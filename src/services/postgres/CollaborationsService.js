@@ -18,7 +18,7 @@ class CollaborationsService {
 
     if (checkUserResult.rows.length === 0) {
       throw new NotFoundError(
-        'Collaboration failed to be added, user not found'
+        'Collaboration failed to be added, user not found',
       );
     }
 

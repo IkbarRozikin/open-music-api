@@ -14,7 +14,7 @@ class AuthenticationsHandler {
     this._validator.validatePostAuthenticationPayload(req.payload);
 
     const { id, username } = await this._usersService.verifyUserCredential(
-      req.payload
+      req.payload,
     );
 
     const accessToken = this._tokenManager.generateAccessToken({

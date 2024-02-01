@@ -31,6 +31,11 @@ const routes = (handler) => [
       },
     },
   },
+  // {
+  //   method: 'POST',
+  //   path: 'albums/{albumId}/likes',
+  //   handler: handler.postLikeAlbum,
+  // },
 ];
 
 module.exports = routes;
