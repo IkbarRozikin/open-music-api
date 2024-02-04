@@ -2,16 +2,16 @@ const autoBind = require('auto-bind');
 
 class SongsHandler {
   constructor(service, validator) {
-    this.service = service;
-    this.validator = validator;
+    this._service = service;
+    this._validator = validator;
 
     autoBind(this);
   }
 
   async postSongHandler(req, h) {
-    this.validator.validateSongPayload(req.payload);
+    this._validator.validateSongPayload(req.payload);
 
-    const songId = await this.service.addSong(req.payload);
+    const songId = await this._service.addSong(req.payload);
 
     const response = h
       .response({
@@ -28,7 +28,7 @@ class SongsHandler {
   async getSongsHandler(req) {
     const { title, performer } = req.query;
 
-    const songs = await this.service.getSongs(title, performer);
+    const songs = await this._service.getSongs(title, performer);
 
     return {
       status: 'success',
@@ -41,7 +41,7 @@ class SongsHandler {
   async getSongByIdHandler(req, h) {
     const { songId } = req.params;
 
-    const song = await this.service.getSongById(songId);
+    const song = await this._service.getSongById(songId);
 
     const response = h
       .response({
@@ -56,11 +56,11 @@ class SongsHandler {
   }
 
   async putSongByIdHandler(req, h) {
-    this.validator.validateSongPayload(req.payload);
+    this._validator.validateSongPayload(req.payload);
 
     const { id } = req.params;
 
-    await this.service.putSongById(id, req.payload);
+    await this._service.putSongById(id, req.payload);
 
     const response = h
       .response({
@@ -75,7 +75,7 @@ class SongsHandler {
   async deletedSongByIdHandler(req, h) {
     const { id } = req.params;
 
-    await this.service.deleteSongById(id);
+    await this._service.deleteSongById(id);
 
     const response = h
       .response({

@@ -169,8 +169,7 @@ const init = async () => {
 
       const newResponse = h.response({
         status: 'fail',
-        // message: 'There was a failure on our server',
-        message: response.message,
+        message: 'There was a failure on our server',
       });
       newResponse.code(400);
       return newResponse;

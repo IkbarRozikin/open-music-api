@@ -2,7 +2,7 @@ const autoBind = require('auto-bind');
 
 class CollaborationsHandler {
   constructor(collaborationsService, playlistsService, validator) {
-    this.collaborationsService = collaborationsService;
+    this._collaborationsService = collaborationsService;
     this.playlistsService = playlistsService;
     this.validator = validator;
 
@@ -17,7 +17,7 @@ class CollaborationsHandler {
 
     await this.playlistsService.verifyPlaylistsOwner(playlistId, credentialId);
 
-    const collaborationId = await this.collaborationsService.addCollaboration(
+    const collaborationId = await this._collaborationsService.addCollaboration(
       playlistId,
       userId,
     );
@@ -40,7 +40,7 @@ class CollaborationsHandler {
     const { playlistId, userId } = req.payload;
 
     await this.playlistsService.verifyPlaylistsOwner(playlistId, credentialId);
-    await this.collaborationsService.deleteCollaboration(playlistId, userId);
+    await this._collaborationsService.deleteCollaboration(playlistId, userId);
 
     return {
       status: 'success',

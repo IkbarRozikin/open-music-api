@@ -9,7 +9,7 @@ class PlaylistsService {
   constructor(collaborationsService) {
     this.pool = new Pool();
 
-    this.collaborationsService = collaborationsService;
+    this._collaborationsService = collaborationsService;
   }
 
   async verifyPlaylistsOwner(playlistId, owner) {
@@ -230,7 +230,10 @@ class PlaylistsService {
         throw error;
       }
       try {
-        await this.collaborationsService.verifyCollaborator(playlistId, userId);
+        await this._collaborationsService.verifyCollaborator(
+          playlistId,
+          userId,
+        );
       } catch {
         throw error;
       }

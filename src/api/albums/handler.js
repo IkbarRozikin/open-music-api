@@ -2,17 +2,17 @@ const autoBind = require('auto-bind');
 
 class AlbumsHandler {
   constructor(albumsService, storageService, validator) {
-    this.albumsService = albumsService;
-    this.storageService = storageService;
-    this.validator = validator;
+    this._albumsService = albumsService;
+    this._storageService = storageService;
+    this._validator = validator;
 
     autoBind(this);
   }
 
   async postAlbumHandler(req, h) {
-    this.validator.validateAlbumPayload(req.payload);
+    this._validator.validateAlbumPayload(req.payload);
 
-    const albumId = await this.albumsService.addAlbum(req.payload);
+    const albumId = await this._albumsService.addAlbum(req.payload);
 
     const response = h
       .response({
@@ -29,7 +29,7 @@ class AlbumsHandler {
   async getAlbumByIdHandler(req, h) {
     const { albumId } = req.params;
 
-    const album = await this.albumsService.getAlbumById(albumId);
+    const album = await this._albumsService.getAlbumById(albumId);
 
     const response = h
       .response({
@@ -44,11 +44,11 @@ class AlbumsHandler {
   }
 
   async putAlbumByIdHandler(req, h) {
-    this.validator.validateAlbumPayload(req.payload);
+    this._validator.validateAlbumPayload(req.payload);
 
     const { id } = req.params;
 
-    await this.albumsService.editAlbumById(id, req.payload);
+    await this._albumsService.editAlbumById(id, req.payload);
 
     const response = h
       .response({
@@ -63,7 +63,7 @@ class AlbumsHandler {
   async deleteAlbumByIdHandler(req, h) {
     const { id } = req.params;
 
-    await this.albumsService.deleteAlbumById(id);
+    await this._albumsService.deleteAlbumById(id);
 
     const response = h
       .response({
@@ -78,15 +78,15 @@ class AlbumsHandler {
   async postAlbumCoverHandler(req, h) {
     const { cover } = req.payload;
 
-    this.validator.validateImageHeaders(cover.hapi.headers);
+    this._validator.validateImageHeaders(cover.hapi.headers);
 
-    const filename = await this.storageService.writeFile(cover, cover.hapi);
+    const filename = await this._storageService.writeFile(cover, cover.hapi);
 
     const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
 
     const { albumId } = req.params;
 
-    await this.albumsService.addAlbumCoverById(albumId, fileLocation);
+    await this._albumsService.addAlbumCoverById(albumId, fileLocation);
 
     const response = h
       .response({
@@ -106,7 +106,7 @@ class AlbumsHandler {
 
     const { id: userId } = req.auth.credentials;
 
-    await this.albumsService.addLikeAlbum(albumId, userId);
+    await this._albumsService.addLikeAlbum(albumId, userId);
 
     const response = h
       .response({
@@ -121,7 +121,7 @@ class AlbumsHandler {
   async getLikeAlbum(req, h) {
     const { albumId } = req.params;
 
-    const { data: likes, dataSource } = await this.albumsService.getLikeAlbumCount(albumId);
+    const { data: likes, dataSource } = await this._albumsService.getLikeAlbumCount(albumId);
 
     const response = h
       .response({
@@ -141,7 +141,7 @@ class AlbumsHandler {
 
     const { id: userId } = req.auth.credentials;
 
-    await this.albumsService.unlikeAlbum(albumId, userId);
+    await this._albumsService.unlikeAlbum(albumId, userId);
 
     const response = h
       .response({
