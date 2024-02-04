@@ -8,7 +8,7 @@ module.exports = {
     const albumsHandler = new AlbumsHandler(
       albumsService,
       storageService,
-      validator
+      validator,
     );
     server.route(router(albumsHandler));
   },

@@ -101,7 +101,57 @@ class AlbumsHandler {
     return response;
   }
 
-  // async postLikeAlbum() {}
+  async postLikeAlbum(req, h) {
+    const { albumId } = req.params;
+
+    const { id: userId } = req.auth.credentials;
+
+    await this.albumsService.addLikeAlbum(albumId, userId);
+
+    const response = h
+      .response({
+        status: 'success',
+        message: 'Liked ',
+      })
+      .code(201);
+
+    return response;
+  }
+
+  async getLikeAlbum(req, h) {
+    const { albumId } = req.params;
+
+    const { data: likes, dataSource } = await this.albumsService.getLikeAlbumCount(albumId);
+
+    const response = h
+      .response({
+        status: 'success',
+        data: {
+          likes,
+        },
+      })
+      .header('X-Data-Source', dataSource)
+      .code(200);
+
+    return response;
+  }
+
+  async deleteLikeAlbum(req, h) {
+    const { albumId } = req.params;
+
+    const { id: userId } = req.auth.credentials;
+
+    await this.albumsService.unlikeAlbum(albumId, userId);
+
+    const response = h
+      .response({
+        status: 'success',
+        message: 'Unlike',
+      })
+      .code(200);
+
+    return response;
+  }
 }
 
 module.exports = AlbumsHandler;

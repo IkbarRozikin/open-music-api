@@ -5,8 +5,10 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 const { mapDBToModel, mapDBToModelSongs } = require('../../utils');
 
 class AlbumsService {
-  constructor() {
+  constructor(cacheService) {
     this.pool = new Pool();
+
+    this._cacheService = cacheService;
   }
 
   async addAlbum({ name, year }) {
@@ -106,6 +108,70 @@ class AlbumsService {
     const coverIdResult = insertResult.rows[0].id;
 
     return coverIdResult;
+  }
+
+  async addLikeAlbum(albumId, userId) {
+    const queryAlbum = {
+      text: 'SELECT id FROM albums WHERE id = $1',
+      values: [albumId],
+    };
+
+    const resultQueryAlbum = await this.pool.query(queryAlbum);
+
+    if (!resultQueryAlbum.rowCount) {
+      throw new NotFoundError('Album Id not found');
+    }
+
+    const id = `${nanoid(16)}`;
+    const createdAt = new Date().toISOString();
+
+    const query = {
+      text: 'INSERT INTO user_album_likes VALUES($1, $2, $3, $4, $4) RETURNING id',
+      values: [id, userId, albumId, createdAt],
+    };
+
+    const result = await this.pool.query(query);
+
+    await this._cacheService.delete(`likeCount${albumId}`);
+
+    return result.rows[0].id;
+  }
+
+  async getLikeAlbumCount(albumId) {
+    try {
+      const cachedResult = await this._cacheService.get(`likeCount${albumId}`);
+      const cachedLikes = JSON.parse(cachedResult);
+
+      return { data: cachedLikes, dataSource: 'cache' };
+    } catch (error) {
+      const query = {
+        text: 'SELECT id FROM user_album_likes WHERE album_id = $1',
+        values: [albumId],
+      };
+      const result = await this.pool.query(query);
+
+      await this._cacheService.set(
+        `likeCount${albumId}`,
+        JSON.stringify(result.rowCount),
+      );
+
+      return { data: result.rowCount, dataSource: 'database' };
+    }
+  }
+
+  async unlikeAlbum(albumId, userId) {
+    const query = {
+      text: 'DELETE FROM user_album_likes WHERE album_id = $1 AND user_id = $2 RETURNING id',
+      values: [albumId, userId],
+    };
+
+    const result = await this.pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError("You haven't liked the album yet");
+    }
+
+    await this._cacheService.delete(`likeCount${albumId}`);
   }
 }
 

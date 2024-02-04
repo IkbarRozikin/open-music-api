@@ -43,18 +43,22 @@ const ExportsValidator = require('./validation/exports');
 // storage
 const StorageService = require('./services/storage/StorageService');
 
+// cache
+const CacheService = require('./services/redis/CacheService');
+
 require('dotenv').config();
 
 const init = async () => {
   const collaborationsService = new CollaborationsService();
   const storageService = new StorageService(
-    path.resolve(__dirname, 'api/uploads/file/images')
+    path.resolve(__dirname, 'api/uploads/file/images'),
   );
   const songsService = new SongsService();
   const usersService = new UserService();
   const authenticationsService = new AuthenticationService();
   const playlistsService = new PlaylistsService(collaborationsService);
-  const albumsService = new AlbumsService();
+  const cacheService = new CacheService();
+  const albumsService = new AlbumsService(cacheService);
 
   const server = Hapi.server({
     port: process.env.PORT,

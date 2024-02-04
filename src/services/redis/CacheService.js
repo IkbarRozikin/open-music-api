@@ -29,7 +29,7 @@ class CacheService {
     return result;
   }
 
-  async delete(key) {
+  delete(key) {
     return this._client.del(key);
   }
 }
