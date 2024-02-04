@@ -31,11 +31,27 @@ const routes = (handler) => [
       },
     },
   },
-  // {
-  //   method: 'POST',
-  //   path: 'albums/{albumId}/likes',
-  //   handler: handler.postLikeAlbum,
-  // },
+  {
+    method: 'POST',
+    path: '/albums/{albumId}/likes',
+    handler: handler.postLikeAlbum,
+    options: {
+      auth: 'playlists_jwt',
+    },
+  },
+  {
+    method: 'GET',
+    path: '/albums/{albumId}/likes',
+    handler: handler.getLikeAlbum,
+  },
+  {
+    method: 'DELETE',
+    path: '/albums/{albumId}/likes',
+    handler: handler.deleteLikeAlbum,
+    options: {
+      auth: 'playlists_jwt',
+    },
+  },
 ];
 
 module.exports = routes;
