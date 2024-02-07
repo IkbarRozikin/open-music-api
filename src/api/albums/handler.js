@@ -77,14 +77,13 @@ class AlbumsHandler {
 
   async postAlbumCoverHandler(req, h) {
     const { cover } = req.payload;
+    const { albumId } = req.params;
 
     this._validator.validateImageHeaders(cover.hapi.headers);
 
     const filename = await this._storageService.writeFile(cover, cover.hapi);
 
-    const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/upload/images/${filename}`;
-
-    const { albumId } = req.params;
+    const fileLocation = `http://${process.env.HOST}:${process.env.PORT}/src/api/uploads/${filename}`;
 
     await this._albumsService.addAlbumCoverById(albumId, fileLocation);
 

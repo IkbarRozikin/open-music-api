@@ -1,3 +1,5 @@
+const path = require('path');
+
 const routes = (handler) => [
   {
     method: 'POST',
@@ -8,6 +10,15 @@ const routes = (handler) => [
     method: 'GET',
     path: '/albums/{albumId}',
     handler: handler.getAlbumByIdHandler,
+  },
+  {
+    method: 'GET',
+    path: '/src/api/uploads/{file*}',
+    handler: {
+      directory: {
+        path: path.resolve('src/api/uploads'),
+      },
+    },
   },
   {
     method: 'PUT',
@@ -28,6 +39,7 @@ const routes = (handler) => [
         allow: 'multipart/form-data',
         multipart: true,
         output: 'stream',
+        maxBytes: 512000,
       },
     },
   },

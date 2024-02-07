@@ -14,15 +14,14 @@ class ExportsHandler {
 
     const { playlistId } = req.params;
 
+    const { id: owner } = req.auth.credentials;
+
     const message = {
-      owner: req.auth.credentials.id,
+      playlistId,
       targetEmail: req.payload.targetEmail,
     };
 
-    await this._playlistsService.verifyPlaylistsOwner(
-      playlistId,
-      message.owner,
-    );
+    await this._playlistsService.verifyPlaylistsOwner(playlistId, owner);
 
     await this._ProducerService.sendMessage(
       'export:playlists',

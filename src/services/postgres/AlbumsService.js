@@ -153,6 +153,7 @@ class AlbumsService {
       await this._cacheService.set(
         `likeCount${albumId}`,
         JSON.stringify(result.rowCount),
+        3600,
       );
 
       return { data: result.rowCount, dataSource: 'database' };
